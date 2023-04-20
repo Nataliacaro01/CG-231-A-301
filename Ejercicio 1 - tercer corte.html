@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Grupo de cubos</title>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="module">
+    import * as THREE from 'https://sebastiann16.github.io/CompG/three.module.js';
+    import { OrbitControls } from 'https://sebastiann16.github.io/CompG/OrbitControls.js';
+    var WIDTH = window.innerWidth;
+    var HEIGHT = window.innerHeight;
+   
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(WIDTH, HEIGHT);
+    renderer.setClearColor(0xDDDDDD, 1);
+    document.body.appendChild(renderer.domElement);
+
+    var scene = new THREE.Scene();
+
+    var camera = new THREE.PerspectiveCamera(20, WIDTH / HEIGHT);
+    camera.position.z = 80;
+    camera.position.y =18;
+    camera.position.x = 15;
+    scene.add(camera);
+    const light = new THREE.AmbientLight(0x404040, 5);
+    scene.add(light);
+
+
+    const color = [0x660B0B, 0x282863];
+
+    function cubo(base, altura, ancho, col) {
+      const geometry = new THREE.BoxGeometry(base, altura, ancho);
+      const material = new THREE.MeshBasicMaterial({ color: col });
+      return new THREE.Mesh(geometry, material);
+    }
+
+    //Creacion de los cubos
+    var ArCub = [];
+    var n = color.length;
+    var lado=10;
+    for (var i = 0; i <n; i++) {
+      var alto = i+1;
+      ArCub[i] = cubo(2, 8, 2, color[i]);
+      ArCub[i].position.x = 1;
+      ArCub[i].position.y = 4;
+      
+    }
+
+    const group = new THREE.Group();
+    for (i = 0; i < n; i++) {
+      group.add(ArCub[i]);
+    }
+
+    //Transformaciones de los cubos
+    ArCub[0].translate = (lado/2,lado/2,lado/2);
+    ArCub[1].translate =(lado/2,lado+lado/4,lado/2);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+
+    const size = 150;
+    const divisions = 160;
+    const axes = new THREE.AxesHelper(100000);
+    scene.add(axes);
+
+    const gridHelper = new THREE.GridHelper(size, divisions);
+    scene.add(gridHelper);
+
+    const axesHelper = new THREE.AxesHelper( 10 );
+    scene.add( axesHelper );
+    scene.add(group);
+    renderer.render(scene, camera);
+  </script>
+</body>
+
+</html>
